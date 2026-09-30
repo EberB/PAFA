@@ -10,8 +10,8 @@ PAFA es una propuesta, no una norma ni un producto. No maneja datos reales y no 
 vínculo con el BCRA ni con ninguna entidad gubernamental.
 
 - **Por qué existe, qué propone y cómo avanza el proyecto → [pafa.ar](https://pafa.ar)**
-- **La investigacion que acompña dicho perfil → [bezzone.me/research](https://bezzone.me/research)**
-- **Algunas preguntas que todabia estan abiertas → [debates abiertos](https://github.com/users/EberB/projects/8)**
+- **La investigación que acompaña dicho perfil → [bezzone.me/research](https://bezzone.me/research)**
+- **Algunas preguntas que todavía están abiertas → [debates abiertos](https://github.com/users/EberB/projects/8)**
 
 Este repositorio es el anexo técnico: las decisiones, los contratos y las preguntas abiertas, capa
 por capa.
@@ -45,4 +45,4 @@ Cada cambio queda registrado en [`CHANGELOG.md`](CHANGELOG.md); los tags son `pa
 
 ---
 
-Escrito por Eber Bezzone · Mas información en [bezzone.me/research](https://bezzone.me/research).
+Escrito por Eber Bezzone · Más información en [bezzone.me/research](https://bezzone.me/research).
