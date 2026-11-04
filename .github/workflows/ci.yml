@@ -1,0 +1,63 @@
+name: ci
+
+on:
+  pull_request:
+    branches: [dev, main]
+
+permissions:
+  contents: read
+
+jobs:
+  rastros:
+    name: commits y contenido limpios
+    runs-on: ubuntu-24.04
+    env:
+      # Patrón de rastros en base64, para que este archivo no coincida consigo mismo.
+      PATRON_B64: KGNvLWF1dGhvcmVkLWJ5Oi4qKGNsYXVkZXxhbnRocm9waWN8b3BlbmFpfGNvcGlsb3QpKXxnZW5lcmF0ZWQgd2l0aHxjbGF1ZGV8YW50aHJvcGljfGNoYXRncHR8b3BlbmFpfGNvcGlsb3R88J+klg==
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Mensajes de commit del PR
+        run: |
+          patron="$(echo "$PATRON_B64" | base64 -d)"
+          rango="${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}"
+          if git log --format='%an%n%ae%n%cn%n%ce%n%B' "$rango" | grep -inE "$patron"; then
+            echo "::error::Hay rastros en los mensajes de commit de $rango"
+            exit 1
+          fi
+      - name: Archivos del repositorio
+        run: |
+          patron="$(echo "$PATRON_B64" | base64 -d)"
+          if git grep -nIiE "$patron" -- . ':!.github/workflows/ci.yml'; then
+            echo "::error::Hay rastros en el contenido"
+            exit 1
+          fi
+          prohibidos="$(git ls-files | grep -iE '(^|/)(claude\.md|agents\.md)$|^\.claude/' || true)"
+          if [ -n "$prohibidos" ]; then
+            echo "::error::Archivos que no van en este repositorio: $prohibidos"
+            exit 1
+          fi
+
+  docs:
+    name: documentación
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Markdown
+        run: npx -y markdownlint-cli2@0.18.1 "**/*.md"
+      - name: Enlaces relativos
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --offline --no-progress "**/*.md"
+          fail: true
+      - name: Contratos
+        run: |
+          if [ -d profile ]; then
+            npx -y @redocly/cli@2.54.1 lint profile/**/*.yaml
+          else
+            echo "Todavía no hay contratos en profile/"
+          fi

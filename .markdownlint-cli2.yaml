@@ -1,0 +1,10 @@
+# Sólo reglas que detectan algo roto (enlaces, tablas); el estilo del texto no se controla.
+config:
+  default: false
+  MD011: true   # enlace invertido (texto)[url]
+  MD034: true   # URL suelta sin <>
+  MD039: true   # espacios dentro del texto de un enlace
+  MD042: true   # enlace vacío
+  MD051: true   # ancla a un título que no existe
+  MD052: true   # referencia a un enlace no definido
+  MD056: true   # fila de tabla con otra cantidad de columnas
